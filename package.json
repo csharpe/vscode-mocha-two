@@ -5,7 +5,7 @@
   "version": "1.0.0",
   "publisher": "MystK",
   "engines": {
-    "vscode": "^0.10.1"
+    "vscode": "^1.10.1"
   },
   "icon": "icon.png",
   "galleryBanner.color": "#8A6343",
