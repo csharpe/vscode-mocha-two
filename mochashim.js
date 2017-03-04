@@ -29,18 +29,18 @@ function stripWarnings(text) { // Remove node.js warnings, which would make JSON
 let terminalEventSet = {};
 let terminals = {}
 function runTests(testFiles, grep, messages) {
-  terminals[grep] = terminals[grep] || vscode.window.createTerminal({ name: grep });
-  terminals[grep].show(true)
-  terminals[grep].sendText(`node node_modules/mocha/bin/_mocha --opts mocha.opts ./**/*.spec.js --grep "${grep}"`)
-  if (!terminalEventSet[grep]) {
+  const parsedGrep = grep.slice(2,-1);
+  terminals[parsedGrep] = terminals[parsedGrep] || vscode.window.createTerminal({ name: parsedGrep });
+  terminals[parsedGrep].show(true)
+  terminals[parsedGrep].sendText(`node node_modules/mocha/bin/_mocha --opts mocha.opts ./**/*.spec.js --grep "${grep}"`)
+  if (!terminalEventSet[parsedGrep]) {
     vscode.window.onDidCloseTerminal(terminalClosed => {
-      console.log(terminalClosed);
       if (terminals[terminalClosed.name]) {
         terminals[terminalClosed.name] = null;
         terminalEventSet[terminalClosed.name] = false;
       }
     });
-    terminalEventSet[grep] = true;
+    terminalEventSet[parsedGrep] = true;
   }
 }
 
