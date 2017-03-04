@@ -26,22 +26,16 @@ function stripWarnings(text) { // Remove node.js warnings, which would make JSON
   return text.replace(/\(node:\d+\) DeprecationWarning:\s[^\n]+/g, "");
 }
 
-let terminalEventSet = {};
+vscode.window.onDidCloseTerminal(terminalClosed => {
+  if (terminals[terminalClosed.name]) terminals[terminalClosed.name]
+});
 let terminals = {}
 function runTests(testFiles, grep, messages) {
   const parsedGrep = grep.slice(2,-1);
-  terminals[parsedGrep] = terminals[parsedGrep] || vscode.window.createTerminal({ name: parsedGrep });
+  if (terminals[parsedGrep]) terminals[parsedGrep].dispose();
+  terminals[parsedGrep] =  vscode.window.createTerminal({ name: parsedGrep });
   terminals[parsedGrep].show(true)
   terminals[parsedGrep].sendText(`node node_modules/mocha/bin/_mocha --opts mocha.opts ./**/*.spec.js --grep "${grep}"`)
-  if (!terminalEventSet[parsedGrep]) {
-    vscode.window.onDidCloseTerminal(terminalClosed => {
-      if (terminals[terminalClosed.name]) {
-        terminals[terminalClosed.name] = null;
-        terminalEventSet[terminalClosed.name] = false;
-      }
-    });
-    terminalEventSet[parsedGrep] = true;
-  }
 }
 
 function findTests(rootPath) {
