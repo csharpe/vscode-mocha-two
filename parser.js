@@ -70,7 +70,6 @@ module.exports.getTests = function getTests(text, selection){
   const cursor = {row: selection.line + 1, column: selection.character};
   const ast = babylon.parse(text, {sourceType: "import", allowReturnOutsideFunction: true, allowImportExportEverywhere: true});
 
-  fs.writeFileSync("/tmp/ast.json", JSON.stringify(ast, null, 2));
   let tests = [];
   // Start a depth-first visit of the tree
 
